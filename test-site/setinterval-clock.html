@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Simple setInterval clock</title>
+    <style>
+      p {
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="clock"></p>
+    <button id='start'>Start</button>
+    <button id='stop' disabled>Stop</button>
+    <button id='reset' disabled>Reset</button>
+    <script>
+      let startBtn = document.querySelector('#start');
+      let stopBtn = document.querySelector('#stop');
+      let resetBtn = document.querySelector('#reset');
+
+      let isRunning = false;
+      let startTime, endTime;
+      let lastElapsedSecs = 0;
+
+      startBtn.addEventListener('click', function() {
+          if (!isRunning) {
+              isRunning = true;
+              startTime = new Date();
+
+              stopBtn.removeAttribute('disabled');
+              startBtn.setAttribute('disabled', 'disabled');
+              resetBtn.setAttribute('disabled', 'disabled');
+          }
+      })
+      stopBtn.addEventListener('click', function() {
+          if (isRunning) {
+              isRunning = false;
+              lastElapsedSecs += endTime.getSeconds() - startTime.getSeconds();
+
+              stopBtn.setAttribute('disabled', 'disabled');
+              resetBtn.removeAttribute('disabled');
+              startBtn.removeAttribute('disabled');
+          }
+      })
+      resetBtn.addEventListener('click', function() {
+          if (!isRunning) {
+              startTime = endTime = null;
+              lastElapsedSecs = 0;
+
+              startBtn.removeAttribute('disabled');
+              resetBtn.setAttribute('disabled', 'disabled');
+          }
+      })
+
+      function displayTime() {
+          let elapsedSecs = lastElapsedSecs;
+          if (isRunning) {
+              endTime = new Date();
+              elapsedSecs += (endTime.getSeconds() - startTime.getSeconds());
+          }
+
+          document.querySelector('.clock').textContent = elapsedSecs;
+      }
+      displayTime();
+      const createClock = setInterval(displayTime, 1000);
+
+    </script>
+  </body>
+</html>
